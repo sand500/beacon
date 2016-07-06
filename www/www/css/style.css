@@ -43,3 +43,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 		background-color: rgb(161,40,48) !important;
 
 }
+
+.select-dropdown li img {
+
+	width: initial;
+}

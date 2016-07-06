@@ -30,24 +30,22 @@
       
       <div class="center-wrapper">
         <!-- Dropdown Trigger -->
-        <a class='dropdown-button btn' href='#' data-activates='dropdown1'>Select a rewards card: </a>
-
-        <!-- Dropdown Structure -->
-        <ul id='dropdown1' class='dropdown-content'>
-          <li><a href="#!">one card</a></li>
-          <li class="divider"></li>
-          <li><a href="#!">two cards</a></li>
-          <li class="divider"></li>
-          <li><a href="#!">three cards</a></li>
-        </ul>
+        <div class="input-field col s12 m6">
+        <select class="icons" id ="cardSelect">
+          <option value="" disabled active selected>Choose your option</option>
+          <option value="" data-icon="images/plat.png" class="left ">Platinum   </option>
+          <option value="" data-icon="images/qs.png"   class="left ">Quicksilver</option>
+          <option value="" data-icon="images/vent.png" class="left ">Venture    </option>
+        </select>
+       
      
-            
+             </div>
         <br>
       
         <form class="col s6">
          
           <div class="input-field col s6">
-            <input placeholder="Rewards Goal" id="rewards-goal" type="text" type="number" lass="validate">
+            <input placeholder="Rewards Goal" id="rewards-goal" type="number" lass="validate">
             
           </div>
 
@@ -78,8 +76,19 @@
   <script type="text/javascript">
     var rewardsAccs = JSON.parse(JSON.parse(atob('{{rewardAccounts}}')));
     console.log(rewardsAccs);
-    console.log(test);
 
+  $(document).ready(function() {
+        console.log("yo");
+
+    $('select').material_select();
+
+    $('submitGoal').click() {
+      
+    }
+  });
+
+
+       
 
   </script>
 
