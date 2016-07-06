@@ -16,3 +16,30 @@
 .center-wrapper {
     text-align: center;
 }
+h1 {
+   
+    font-weight: bold;
+    color:rgb(0,58,111) !important;
+}
+#download-button{
+	background-color: rgb(161,40,48) !important;
+}
+.material-icons {
+	color:rgb(0,58,111) !important; 
+}
+.dropdown-button{
+	background-color: rgb(161,40,48) !important;
+}
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#rewards-goal {
+	width: 12%;
+}
+#submitGoal{
+		background-color: rgb(161,40,48) !important;
+
+}
