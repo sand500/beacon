@@ -59,9 +59,10 @@ app.get('/redirect', function(req, res) {
 				    'Authorization': 'Bearer '+ access_token, "Accept": "application/json;v=1"}
 				};
 
-				function callback(error, response, body) {
-					console.log(body);
-					    res.render('form', { /* template locals context */ });
+				function callback(error, response, body2) {
+					console.log(body2);
+					console.log(JSON.stringify(body2));
+					    res.render('form', { rewardAccounts: new Buffer(JSON.stringify(body2)).toString('base64') });
 
 				}
 
