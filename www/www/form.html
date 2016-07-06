@@ -9,6 +9,11 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+ 
+
+
+
 </head>
 <body>
   
@@ -30,6 +35,7 @@
       
       <div class="center-wrapper">
         <!-- Dropdown Trigger -->
+
         <div class="input-field col s12 m6">
         <select class="icons" id ="cardSelect">
           <option value="" disabled active selected>Choose your option</option>
@@ -38,6 +44,7 @@
           <option value="" data-icon="images/vent.png" class="left ">Venture    </option>
         </select>
        
+
      
              </div>
         <br>
@@ -72,23 +79,43 @@
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="js/materialize.js"></script>
   <script src="js/init.js"></script>
+  <script src="js/jquery-3.0.0.min.js"></script>
  
   <script type="text/javascript">
     var rewardsAccs = JSON.parse(JSON.parse(atob('{{rewardAccounts}}')));
-    console.log(rewardsAccs);
 
-  $(document).ready(function() {
-        console.log("yo");
-
-    $('select').material_select();
-
-    $('submitGoal').click() {
-      
-    }
-  });
+    console.log(rewardsAccs.rewardsAccounts.length);
 
 
-       
+
+   
+    $(document).ready(function(){
+   
+            console.log("yo");
+
+        $('select').material_select();
+
+        $('submitGoal').click() {
+          
+        }
+    
+
+      var numCards = rewardsAccs.rewardsAccounts.length;
+      console.log("numCards: " + numCards);
+
+
+      for(var i = 0; i < numCards; i++){
+
+        var cardName = rewardsAccs.rewardsAccounts[i].accountDisplayName;
+        console.log("card name: " + cardName);
+        var li = '<li><a href="#!">' + cardName + "/a></li>";
+        var divider = '<li class="divider"></li>';
+        console.log(li + " " + divider);
+
+        $("#dropdown1").append(li, divider);
+      }
+
+    });
 
   </script>
 
