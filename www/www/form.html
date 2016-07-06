@@ -124,8 +124,9 @@
   <script src="js/init.js"></script>
  
   <script type="text/javascript">
-    var rewardsAccs = JSON.parse(atob('{{rewardAccounts}}'));
+    var rewardsAccs = JSON.parse(JSON.parse(atob('{{rewardAccounts}}')));
     console.log(rewardsAccs);
+    console.log(test);
 
 
   </script>
