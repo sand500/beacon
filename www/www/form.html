@@ -9,6 +9,11 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+ 
+
+
+
 </head>
 <body>
   
@@ -34,11 +39,7 @@
 
         <!-- Dropdown Structure -->
         <ul id='dropdown1' class='dropdown-content'>
-          <li><a href="#!">one card</a></li>
           <li class="divider"></li>
-          <li><a href="#!">two cards</a></li>
-          <li class="divider"></li>
-          <li><a href="#!">three cards</a></li>
         </ul>
      
             
@@ -74,12 +75,35 @@
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="js/materialize.js"></script>
   <script src="js/init.js"></script>
+  <script src="js/jquery-3.0.0.min.js"></script>
  
   <script type="text/javascript">
     var rewardsAccs = JSON.parse(JSON.parse(atob('{{rewardAccounts}}')));
-    console.log(rewardsAccs);
-    console.log(test);
+    console.log(rewardsAccs.rewardsAccounts.length);
 
+
+  </script>
+
+  <script>
+   
+    $(document).ready(function(){
+
+      var numCards = rewardsAccs.rewardsAccounts.length;
+      console.log("numCards: " + numCards);
+
+
+      for(var i = 0; i < numCards; i++){
+
+        var cardName = rewardsAccs.rewardsAccounts[i].accountDisplayName;
+        console.log("card name: " + cardName);
+        var li = '<li><a href="#!">' + cardName + "/a></li>";
+        var divider = '<li class="divider"></li>';
+        console.log(li + " " + divider);
+
+        $("#dropdown1").append(li, divider);
+      }
+
+    });
 
   </script>
 
