@@ -72,14 +72,34 @@ app.get('/redirect', function(req, res) {
 
 		    }
 		});
+});
 
+app.get('/submit', function(req, res) {
 
+		var id = req.query.id;
+		var goal = req.query.goal;
+ 
+		console.log("id" + id);
 
-
+		console.log("goal" + goal);
 
 		
+		var options = {
+				  url: 'https://api-sandbox.capitalone.com/rewards/accounts/'+id,
+				  headers: {
+				    'Authorization': 'Bearer '+ access_token, "Accept": "application/json;v=1"}
+				};
 
-     
+				function callback(error, response, body2) {
+					console.log(body2);
+					console.log(JSON.stringify(body2));
+					res.write("yo");
+					res.end();
+						    
+				}
+
+				request(options, callback);
+				
 });
 
 

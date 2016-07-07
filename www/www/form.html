@@ -56,13 +56,14 @@
             
           </div>
 
-          <button class="btn waves-effect waves-light" id="submitGoal" type="submit" name="action">Submit
-    <i class="material-icons right">send</i>
-  </button>
+  
 
          <!-- I was going to add the button here -->
 
         </form> 
+                <button class="btn waves-effect waves-light" id="submitGoal" >Submit
+    <i class="material-icons right">send</i>
+  </button>
       </div>
 
         
@@ -76,31 +77,46 @@
 
 
   <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="js/materialize.js"></script>
-  <script src="js/init.js"></script>
   <script src="js/jquery-3.0.0.min.js"></script>
- 
+   <script src="js/materialize.js"></script>
+
   <script type="text/javascript">
     var rewardsAccs = JSON.parse(JSON.parse(atob('{{rewardAccounts}}')));
 
-    console.log(rewardsAccs.rewardsAccounts.length);
+  // console.log(rewardsAccs.rewardsAccounts.length);
 
 
 
    
     $(document).ready(function(){
    
-            console.log("yo");
-
+            console.log("yo0");
         $('select').material_select();
+       
 
-        $('submitGoal').click() {
-          
-        }
-    
+       $('#submitGoal').click(function () {
+            console.log("test");
+            var selectedText  = $("li.selected").text();
+            var goall = $('#rewards-goal').val();
+            if(! isNaN(goall) ) {
 
-      var numCards = rewardsAccs.rewardsAccounts.length;
+                $.ajax({
+                    url: "submit",
+                    type: "get", //send it through get method
+                    data:{id:"409u04",goal:goall},
+                    success: function(response) {
+                      console.log(response);
+                    },
+                    error: function(xhr) {
+                      //Do Something to handle error
+                    }
+                  });
+            }
+            
+        });
+    }); 
+
+    /*  var numCards = rewardsAccs.rewardsAccounts.length;
       console.log("numCards: " + numCards);
 
 
@@ -116,6 +132,8 @@
       }
 
     });
+    */
+    
 
   </script>
 
