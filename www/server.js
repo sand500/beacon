@@ -5,6 +5,14 @@ var swig = require('swig'); //template engine for express
 var request = require('request');
 var app = express();
 
+var SerialPort = require('serialport');
+var arduinoPort = new SerialPort('/dev/cu.usbmodem1411', function(err) {
+  if (err) {
+    return console.log('Error: ', err.message);
+  }
+
+});
+
 app.set('port', 8000); //set port to 8000 instead of 80
 app.listen(app.get('port'));
 
@@ -34,7 +42,7 @@ app.get('/redirect', function(req, res) {
       var code = req.query.code;
       console.log("User Code: " + code);
 
-		    	
+
 
 		request({
 		    url: 'https://api-sandbox.capitalone.com/oauth/oauth20/token', //URL to hit
@@ -42,13 +50,13 @@ app.get('/redirect', function(req, res) {
 		    headers: {
 		        'content-type': 'application/x-www-form-urlencoded'
 		    },
-		   
+
 			  body : "code="+code+"&client_id=" +client_id+ "&client_secret=" + client_secret	+ "&redirect_uri=http://localhost:8000/redirect&grant_type=authorization_code"
 		}, function(error, response, body){
 		    if(error) {
 		        console.log(error);
 		    } else {
-		    	global.access_token = JSON.parse(body).access_token; 	
+		    	global.access_token = JSON.parse(body).access_token;
 		        console.log(JSON.parse(body));
 		        console.log("------------------" + global.access_token)
 
@@ -78,14 +86,14 @@ app.get('/submit', function(req, res) {
 
 		var id = req.query.id;
 		var goal = req.query.goal;
- 
+
 		console.log("\nid\n\n" + id);
 
 		console.log("\n\ngoal" + goal);
 
 
 		console.log("Access Token #2: " + global.access_token)
-		
+
 		var options = {
 				  url: 'https://api-sandbox.capitalone.com/rewards/accounts/'+encodeURIComponent(id),
 				  headers: {
@@ -94,20 +102,28 @@ app.get('/submit', function(req, res) {
 
 				function callback(error, response, body2) {
 					console.log(body2);
-					var percent = 10* goal / (JSON.parse(body2).rewardsBalance + 0.0);
+          console.log("balance" + JSON.parse(body2).rewardsBalance + 0.0);
+          console.log("goal" + goal);
+
+					var percent = 10*  (JSON.parse(body2).rewardsBalance + 0.0)/ goal ;
 					console.log(percent);
 
-					writeToArduino(percent);
+				//	writeToArduino(percent);
 					res.write("good");
 					res.end();
-						    
+
 				}
 
 				request(options, callback);
-				
+
 });
 
-function writeToArduino(percent) {
-	
+function writeToArduino(numBars) {
+  arduinoPort.write(numBars+'\r\n', function(err) {
+      if (err) {
+        return console.log('Error on write: ', err.message);
+      }
+      console.log('message sent');
+  });
 }
 //curl -H "Content-Type:application/x-www-form-urlencoded&" "code=H_7qfdxNnj6hQildQn5pEJ8V-ygKx9EMLdUHrw&client_id=enterpriseapi-sb-HcJlRtRirL1le4oCp9a2FCrE&client_secret=38122cd43791e4d114418df787af29cbb0d053f4&redirect_uri=http://localhost:8000/redirect&grant_type=authorization_code" -X POST https://api-sandbox.capitalone.com/oauth/oauth20/token
