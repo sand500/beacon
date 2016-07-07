@@ -97,12 +97,26 @@
             console.log("test");
             var selectedText  = $("li.selected").text();
             var goall = $('#rewards-goal').val();
+            var rewardID;
+
+            for(var i = 0; i < numCards; i++){
+
+              var cardName = rewardsAccs.rewardsAccounts[i].accountDisplayName;
+              console.log("Card Name:" + cardName);
+              if(cardName ==selectedText ) {
+                console.log("Found one " + rewardsAccs.rewardsAccounts[i].rewardsAccountReferenceId );
+                rewardID = rewardsAccs.rewardsAccounts[i].rewardsAccountReferenceId;
+              }
+
+            }
+
             if(! isNaN(goall) ) {
+                 console.log("ID Sendinng in request with " + rewardID);
 
                 $.ajax({
                     url: "submit",
                     type: "get", //send it through get method
-                    data:{id:"409u04",goal:goall},
+                    data:{id:rewardID,goal:goall},
                     success: function(response) {
                       console.log(response);
                     },
@@ -113,10 +127,10 @@
             }
             
         });
-    }); 
+   
 
 
-    /*  var numCards = rewardsAccs.rewardsAccounts.length;
+     var numCards = rewardsAccs.rewardsAccounts.length;
       console.log("numCards: " + numCards);
 
       for(var i = 0; i < numCards; i++){
@@ -149,7 +163,7 @@
       $('select').material_select();
 
     });
-    */
+  
     
 
   </script>

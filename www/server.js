@@ -12,7 +12,6 @@ app.listen(app.get('port'));
 var client_id = "enterpriseapi-sb-HcJlRtRirL1le4oCp9a2FCrE";
 var client_secret = "38122cd43791e4d114418df787af29cbb0d053f4";
 var redirect_uri = "http://localhost:8000/redirect"
-var access_token = "";
 
 app.set('view engine', 'html'); //
 app.set('views', __dirname +"/www"); //tell nodejs where html files are located
@@ -49,14 +48,15 @@ app.get('/redirect', function(req, res) {
 		    if(error) {
 		        console.log(error);
 		    } else {
-		    	var access_token = JSON.parse(body).access_token; 	
+		    	global.access_token = JSON.parse(body).access_token; 	
 		        console.log(JSON.parse(body));
+		        console.log("------------------" + global.access_token)
 
 
 				var options = {
 				  url: 'https://api-sandbox.capitalone.com/rewards/accounts',
 				  headers: {
-				    'Authorization': 'Bearer '+ access_token, "Accept": "application/json;v=1"}
+				    'Authorization': 'Bearer '+ global.access_token, "Accept": "application/json;v=1"}
 				};
 
 				function callback(error, response, body2) {
@@ -79,21 +79,26 @@ app.get('/submit', function(req, res) {
 		var id = req.query.id;
 		var goal = req.query.goal;
  
-		console.log("id" + id);
+		console.log("\nid\n\n" + id);
 
-		console.log("goal" + goal);
+		console.log("\n\ngoal" + goal);
 
+
+		console.log("Access Token #2: " + global.access_token)
 		
 		var options = {
-				  url: 'https://api-sandbox.capitalone.com/rewards/accounts/'+id,
+				  url: 'https://api-sandbox.capitalone.com/rewards/accounts/'+encodeURIComponent(id),
 				  headers: {
-				    'Authorization': 'Bearer '+ access_token, "Accept": "application/json;v=1"}
+				    'Authorization': 'Bearer '+ global.access_token, "Accept": "application/json;v=1"}
 				};
 
 				function callback(error, response, body2) {
 					console.log(body2);
-					console.log(JSON.stringify(body2));
-					res.write("yo");
+					var percent = 10* goal / (JSON.parse(body2).rewardsBalance + 0.0);
+					console.log(percent);
+
+					writeToArduino(percent);
+					res.write("good");
 					res.end();
 						    
 				}
@@ -102,5 +107,7 @@ app.get('/submit', function(req, res) {
 				
 });
 
-
+function writeToArduino(percent) {
+	
+}
 //curl -H "Content-Type:application/x-www-form-urlencoded&" "code=H_7qfdxNnj6hQildQn5pEJ8V-ygKx9EMLdUHrw&client_id=enterpriseapi-sb-HcJlRtRirL1le4oCp9a2FCrE&client_secret=38122cd43791e4d114418df787af29cbb0d053f4&redirect_uri=http://localhost:8000/redirect&grant_type=authorization_code" -X POST https://api-sandbox.capitalone.com/oauth/oauth20/token
