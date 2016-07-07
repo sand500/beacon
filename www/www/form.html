@@ -141,8 +141,8 @@
               bindto: '#goalschart',
               data: {
                 columns: [
-                  ['currentBalance', rewardsBalance],
-                  ['goal', goall],
+                  ['Current Balance', rewardsBalance],
+                  ['Amount Left', goall-rewardsBalance],
                 ],
                 type : 'pie',
                 onclick: function (d, i) { console.log("onclick", d, i); },
