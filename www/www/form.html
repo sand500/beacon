@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>Starter Template - Materialize</title>
+  <title>Beacon Rewards</title>
 
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -37,16 +37,13 @@
         <!-- Dropdown Trigger -->
 
         <div class="input-field col s12 m6">
-        <select class="icons" id ="cardSelect">
-          <option value="" disabled active selected>Choose your option</option>
-          <option value="" data-icon="images/plat.png" class="left ">Platinum   </option>
-          <option value="" data-icon="images/qs.png"   class="left ">Quicksilver</option>
-          <option value="" data-icon="images/vent.png" class="left ">Venture    </option>
-        </select>
-       
-
+          <select class="icons" id ="cardSelect">
+            <option value="" disabled active selected>Choose your option</option>
+           
+              <option value="" data-icon="images/plat.png" class="left " id="tempPlaceholder"> No cards availble </option>
      
-             </div>
+          </select>
+        </div>
         <br>
       
         <form class="col s6">
@@ -77,20 +74,22 @@
 
 
   <!--  Scripts-->
+
   <script src="js/jquery-3.0.0.min.js"></script>
    <script src="js/materialize.js"></script>
 
   <script type="text/javascript">
     var rewardsAccs = JSON.parse(JSON.parse(atob('{{rewardAccounts}}')));
 
-  // console.log(rewardsAccs.rewardsAccounts.length);
+    console.log(rewardsAccs.rewardsAccounts.length);
 
 
 
    
     $(document).ready(function(){
    
-            console.log("yo0");
+        console.log("Jquery is ready");
+        $( "#tempPlaceholder" ).remove();
         $('select').material_select();
        
 
@@ -116,20 +115,38 @@
         });
     }); 
 
+
     /*  var numCards = rewardsAccs.rewardsAccounts.length;
       console.log("numCards: " + numCards);
-
 
       for(var i = 0; i < numCards; i++){
 
         var cardName = rewardsAccs.rewardsAccounts[i].accountDisplayName;
+        cardNameLower = cardName.toLowerCase();
         console.log("card name: " + cardName);
-        var li = '<li><a href="#!">' + cardName + "/a></li>";
-        var divider = '<li class="divider"></li>';
-        console.log(li + " " + divider);
+        var opt = "";
 
-        $("#dropdown1").append(li, divider);
+        if(cardNameLower.includes("miles")){
+          opt = '<option value= "" data-icon="images/vent.png" class="left ">' + cardName + '</option>';
+        } else if(cardNameLower.includes("points")){
+          opt = '<option value= "" data-icon="images/plat.png" class="left ">' + cardName + '</option>';
+        } else if(cardNameLower.includes("cash")){
+          opt = '<option value= "" data-icon="images/qs.png" class="left ">' + cardName + '</option>';
+        } else {
+          console.log("ERROR: no matches");
+        }
+
+        var divider = '<li class="divider"></li>';
+        console.log(opt + " " + divider);
+
+        $("#cardSelect").append(opt, divider);
+
       }
+
+   
+
+
+      $('select').material_select();
 
     });
     */
