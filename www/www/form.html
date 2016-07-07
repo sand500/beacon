@@ -9,12 +9,12 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
+  
+  <!-- Load c3.css -->
+  <link href="css/c3.css" rel="stylesheet" type="text/css">
  
-
-
-
 </head>
+
 <body>
   
   <div class="section no-pad-bot" id="index-banner">
@@ -50,25 +50,25 @@
          
           <div class="input-field col s6">
             <input placeholder="Rewards Goal" id="rewards-goal" type="number" lass="validate">
-            
           </div>
 
-  
-
-         <!-- I was going to add the button here -->
-
         </form> 
-                <button class="btn waves-effect waves-light" id="submitGoal" >Submit
-    <i class="material-icons right">send</i>
-  </button>
-      </div>
+        <button class="btn waves-effect waves-light" id="submitGoal" >Submit
+          <i class="material-icons right">send</i>
+        </button>
 
-        
-    </div>
+       
+
+
+      </div> <!-- /center-wrapper -->
+    </div> <!-- /section -->
     <br>
-
-
-  </div>
+    <div class="section">
+      <div class="center-wrapper">
+         <div id="goalschart"></div>
+      </div>
+    </div>
+  </div> <!-- /container -->
 
  
 
@@ -76,98 +76,133 @@
   <!--  Scripts-->
 
   <script src="js/jquery-3.0.0.min.js"></script>
-   <script src="js/materialize.js"></script>
+  <script src="js/materialize.js"></script>
+
+  <!-- Load d3.js and c3.js -->
+  <script src="js/d3.min.js" charset="utf-8"></script>
+  <script src="js/c3.min.js"></script>
+
+
 
   <script type="text/javascript">
+
     var rewardsAccs = JSON.parse(JSON.parse(atob('{{rewardAccounts}}')));
 
-    console.log(rewardsAccs.rewardsAccounts.length);
+    //if(typeof rewardAccounts != "undefined"){
 
+    
+      console.log(rewardsAccs.rewardsAccounts.length);
 
+      $(document).ready(function(){
 
-   
-    $(document).ready(function(){
-   
         console.log("Jquery is ready");
         $( "#tempPlaceholder" ).remove();
         $('select').material_select();
        
 
        $('#submitGoal').click(function () {
-            console.log("test");
-            var selectedText  = $("li.selected").text();
-            var goall = $('#rewards-goal').val();
-            var rewardID;
+          console.log("test");
+          var selectedText  = $("li.selected").text();
+          var goall = $('#rewards-goal').val();
+          var rewardID, rewardsBalance;
+          console.log("selected Text name: " + selectedText + "length: " + selectedText.length);
+          var selectedTextFixed = selectedText.substring(0, (selectedText.indexOf("|") - 1));
 
-            for(var i = 0; i < numCards; i++){
+          for(var i = 0; i < numCards; i++){
 
-              var cardName = rewardsAccs.rewardsAccounts[i].accountDisplayName;
-              console.log("Card Name:" + cardName);
-              if(cardName ==selectedText ) {
-                console.log("Found one " + rewardsAccs.rewardsAccounts[i].rewardsAccountReferenceId );
-                rewardID = rewardsAccs.rewardsAccounts[i].rewardsAccountReferenceId;
+            var cardName = rewardsAccs.rewardsAccounts[i].accountDisplayName;
+            console.log("Card Name:" + cardName);
+
+            if(cardName ==selectedTextFixed ) {
+              console.log("Found one " + rewardsAccs.rewardsAccounts[i].rewardsAccountReferenceId );
+              rewardID = rewardsAccs.rewardsAccounts[i].rewardsAccountReferenceId;
+              rewardsBalance = rewardsAccs.rewardsAccounts[i].balance;
+            }
+
+          }
+
+          if(! isNaN(goall) ) {
+            console.log("ID Sendinng in request with " + rewardID);
+
+            $.ajax({
+              url: "submit",
+              type: "get", //send it through get method
+              data:{id:rewardID,goal:goall},
+              success: function(response) {
+                console.log(response);
+              },
+              error: function(xhr) {
+                //Do Something to handle error
               }
+            });
 
-            }
+            console.log("balance: " + rewardsBalance);
+            var chart = c3.generate({
+              bindto: '#goalschart',
+              data: {
+                columns: [
+                  ['currentBalance', rewardsBalance],
+                  ['goal', goall],
+                ],
+                type : 'pie',
+                onclick: function (d, i) { console.log("onclick", d, i); },
+                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                onmouseout: function (d, i) { console.log("onmouseout", d, i); },
+                colors: {
+                  currentBalance: '#A12830',
+                  goal: '#003A6F'
 
-            if(! isNaN(goall) ) {
-                 console.log("ID Sendinng in request with " + rewardID);
-
-                $.ajax({
-                    url: "submit",
-                    type: "get", //send it through get method
-                    data:{id:rewardID,goal:goall},
-                    success: function(response) {
-                      console.log(response);
-                    },
-                    error: function(xhr) {
-                      //Do Something to handle error
-                    }
-                  });
-            }
+                }
+              }
+            });
+            
+          }
             
         });
-   
 
 
-     var numCards = rewardsAccs.rewardsAccounts.length;
-      console.log("numCards: " + numCards);
 
-      for(var i = 0; i < numCards; i++){
+        var numCards = rewardsAccs.rewardsAccounts.length;
+        console.log("numCards: " + numCards);
 
-        var cardName = rewardsAccs.rewardsAccounts[i].accountDisplayName;
-        cardNameLower = cardName.toLowerCase();
-        console.log("card name: " + cardName);
-        var opt = "";
+        for(var i = 0; i < numCards; i++){
 
-        if(cardNameLower.includes("miles")){
-          opt = '<option value= "" data-icon="images/vent.png" class="left ">' + cardName + '</option>';
-        } else if(cardNameLower.includes("points")){
-          opt = '<option value= "" data-icon="images/plat.png" class="left ">' + cardName + '</option>';
-        } else if(cardNameLower.includes("cash")){
-          opt = '<option value= "" data-icon="images/qs.png" class="left ">' + cardName + '</option>';
-        } else {
-          console.log("ERROR: no matches");
+          var cardName = rewardsAccs.rewardsAccounts[i].accountDisplayName;
+          var cardBalance = rewardsAccs.rewardsAccounts[i].balance;
+
+          cardNameLower = cardName.toLowerCase();
+          console.log("card name: " + cardName + ", card balance: " + cardBalance);
+          var opt = "";
+
+          if(cardNameLower.includes("miles")){
+            opt = '<option value= "" data-icon="images/vent.png" class="left ">' + cardName  + 
+                  " | Current Balance: " + cardBalance + '</option>';
+          } else if(cardNameLower.includes("points")){
+            opt = '<option value= "" data-icon="images/plat.png" class="left ">' + cardName  + 
+                  " | Current Balance: " + cardBalance + '</option>';
+          } else if(cardNameLower.includes("cash")){
+            opt = '<option value= "" data-icon="images/qs.png" class="left ">' + cardName  + 
+                  " | Current Balance: " + cardBalance + '</option>';
+          } else {
+            console.log("ERROR: no matches");
+          }
+
+          var divider = '<li class="divider"></li>';
+          console.log(opt + " " + divider);
+
+          $("#cardSelect").append(opt, divider);
+
         }
 
-        var divider = '<li class="divider"></li>';
-        console.log(opt + " " + divider);
 
-        $("#cardSelect").append(opt, divider);
+        $('select').material_select();
 
-      }
-
-   
-
-
-      $('select').material_select();
-
-    });
-  
+      });
+    //}
     
+      
 
   </script>
-
 
   </body>
 </html>
