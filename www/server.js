@@ -102,13 +102,13 @@ app.get('/submit', function(req, res) {
 
 				function callback(error, response, body2) {
 					console.log(body2);
-          console.log("balance" + JSON.parse(body2).rewardsBalance + 0.0);
-          console.log("goal" + goal);
+          console.log("balance " + JSON.parse(body2).rewardsBalance);
+          console.log("goal    " + goal);
 
-					var percent = 10*  (JSON.parse(body2).rewardsBalance + 0.0)/ goal ;
-					console.log(percent);
+					var numBars = Math.floor((10*JSON.parse(body2).rewardsBalance) / goal);
+					console.log(numBars);
 
-				//	writeToArduino(percent);
+          writeToArduino(numBars);
 					res.write("good");
 					res.end();
 
@@ -119,11 +119,15 @@ app.get('/submit', function(req, res) {
 });
 
 function writeToArduino(numBars) {
-  arduinoPort.write(numBars+'\r\n', function(err) {
+  arduinoPort.write(numBars+'', function(err) {
       if (err) {
         return console.log('Error on write: ', err.message);
       }
       console.log('message sent');
   });
 }
+
+arduinoPort.on('data', function (data) {
+  console.log('Data: ' + data);
+});
 //curl -H "Content-Type:application/x-www-form-urlencoded&" "code=H_7qfdxNnj6hQildQn5pEJ8V-ygKx9EMLdUHrw&client_id=enterpriseapi-sb-HcJlRtRirL1le4oCp9a2FCrE&client_secret=38122cd43791e4d114418df787af29cbb0d053f4&redirect_uri=http://localhost:8000/redirect&grant_type=authorization_code" -X POST https://api-sandbox.capitalone.com/oauth/oauth20/token
