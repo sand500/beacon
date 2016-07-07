@@ -39,11 +39,9 @@
         <div class="input-field col s12 m6">
           <select class="icons" id ="cardSelect">
             <option value="" disabled active selected>Choose your option</option>
-            <div class="tempPlaceholder">
-              <option value="" data-icon="images/plat.png" class="left ">Platinum   </option>
-              <option value="" data-icon="images/qs.png"   class="left ">Quicksilver</option>
-              <option value="" data-icon="images/vent.png" class="left ">Venture    </option>
-            </div>
+           
+              <option value="" data-icon="images/plat.png" class="left " id="tempPlaceholder"> No cards availble </option>
+     
           </select>
         </div>
         <br>
@@ -87,7 +85,9 @@
     $(document).ready(function(){
    
       console.log("yo");
-      $( ".tempPlaceholder" ).remove();
+      $( "#tempPlaceholder" ).remove();
+
+      $('select').material_select();
     
 
       var numCards = rewardsAccs.rewardsAccounts.length;
